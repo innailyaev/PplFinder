@@ -8,7 +8,7 @@ import * as S from "./style";
 
 const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
-  //const[nationalities,setNationalities] = useState([]);
+  const[favoritesUsers,setFavoritesUsers] = useState([]);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -18,8 +18,20 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
     setHoveredUserId();
   };
 
+  const handleMouseClick = (user)=>{
+    if(!(favoritesUsers.includes(user))){
+      favoritesUsers.push(user);
+      setFavoritesUsers(favoritesUsers=>[...favoritesUsers]);
+    }
+    else{
+      let index=favoritesUsers.indexOf(user);
+      favoritesUsers.splice(index,1);
+      setFavoritesUsers(favoritesUsers=>[...favoritesUsers]);
+    }
+    console.log(favoritesUsers);
+  }
+
   const handleChange = (value,isChecked) => {
-    console.log(value);
     if(isChecked){
       console.log(nationalities.includes(value));
       if(!(nationalities.includes(value))){
@@ -42,7 +54,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
         <CheckBox value="AU" label="Australia" onChange={handleChange} />
         <CheckBox value="CA" label="Canada" onChange={handleChange} />
         <CheckBox value="DE" label="Germany" onChange={handleChange} />
-        <CheckBox value="FR" label="France" onChange={handleChange} /> // add another country
+        <CheckBox value="FR" label="France" onChange={handleChange} /> 
 
       </S.Filters>
       <S.List>
@@ -52,6 +64,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
+              onClick={() => handleMouseClick(user)}
             >
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
@@ -66,6 +79,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
+              
               <S.IconButtonWrapper isVisible={index === hoveredUserId}>
                 <IconButton>
                   <FavoriteIcon color="error" />
