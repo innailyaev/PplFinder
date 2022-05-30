@@ -6,9 +6,8 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
 
-const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
+const UserList = ({ users, isLoading,nationalities,setNationalities,favoritesUsers,setFavoritesUsers }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
-  const[favoritesUsers,setFavoritesUsers] = useState([]);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -18,7 +17,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
     setHoveredUserId();
   };
 
-  const handleMouseClick = (user)=>{
+  const onMouseClick = (user)=>{
     if(!(favoritesUsers.includes(user))){
       favoritesUsers.push(user);
       setFavoritesUsers(favoritesUsers=>[...favoritesUsers]);
@@ -29,6 +28,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
       setFavoritesUsers(favoritesUsers=>[...favoritesUsers]);
     }
     console.log(favoritesUsers);
+    //localStorage.setItem('favoritesUsers', JSON.stringify(favoritesUsers));
   }
 
   const handleChange = (value,isChecked) => {
@@ -47,6 +47,10 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
     }
   }
 
+  useEffect(() => {
+    localStorage.setItem('favoritesUsers', JSON.stringify(favoritesUsers));
+  }, [favoritesUsers]);
+
   return (
     <S.UserList>
       <S.Filters>
@@ -64,7 +68,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => handleMouseClick(user)}
+              //onClick={() => handleMouseClick(user)}
             >
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
@@ -80,8 +84,8 @@ const UserList = ({ users, isLoading,nationalities,setNationalities }) => {
                 </Text>
               </S.UserInfo>
               
-              <S.IconButtonWrapper isVisible={index === hoveredUserId}>
-                <IconButton>
+              <S.IconButtonWrapper isVisible={index === hoveredUserId || favoritesUsers.includes(user) }>
+                <IconButton onClick={() => onMouseClick(user)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
               </S.IconButtonWrapper>

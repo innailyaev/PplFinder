@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Text from "components/Text";
-import Spinner from "components/Spinner";
-import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
@@ -11,8 +9,6 @@ const FavoritesList = ({favoritesUsers}) => {
   //const[favoritesUsers,setFavoritesUsers] = useState([]);
 
 
-  
-
   return (
     <S.UserList>
       <S.List>
@@ -20,7 +16,6 @@ const FavoritesList = ({favoritesUsers}) => {
           return (
             <S.User
               key={index}
-              //onClick={() => handleMouseClick(user)}
             >
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
@@ -36,7 +31,7 @@ const FavoritesList = ({favoritesUsers}) => {
                 </Text>
               </S.UserInfo>
               
-              <S.IconButtonWrapper isVisible={index === hoveredUserId}>
+              <S.IconButtonWrapper isVisible={true}>
                 <IconButton>
                   <FavoriteIcon color="error" />
                 </IconButton>
