@@ -1,32 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import {NationalitiesContext} from "../contexts/NationalitiesContext";
+import {PageContext} from "../contexts/PageContext";
 
 export const usePeopleFetch = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [nationalities,setNationalities] = useState([]);
-  const[favoritesUsers,setFavoritesUsers] = useState([]);
-
-
+  const {nationalities} = useContext(NationalitiesContext);
+  const {pageNumber,setPageNumber} = useContext(PageContext);
 
   useEffect(() => {
+    users.length  = 0;
+    setPageNumber(1);
     fetchUsers();
+
   }, [nationalities]);
 
   useEffect(() => {
-    const favoritesUsers = JSON.parse(localStorage.getItem('favoritesUsers'));
-    if (favoritesUsers) {
-      setFavoritesUsers(favoritesUsers);
-    }
-  }, []);
+    fetchUsers();
+  }, [pageNumber]);
 
+  
   async function fetchUsers() {
     setIsLoading(true);
-    const response = await axios.get(`https://randomuser.me/api/?results=25&page=1&nat=${nationalities.join()}`);
+    const response = await axios.get(`https://randomuser.me/api/?results=10&page=${pageNumber}&nat=${nationalities.join()}`);
     setIsLoading(false);
-    setUsers(response.data.results);
+    setUsers([...users,...response.data.results]);
+
+   
    
   }
 
-  return { users, isLoading, fetchUsers,nationalities,setNationalities,favoritesUsers,setFavoritesUsers};
+  return { users, isLoading, fetchUsers};
 };

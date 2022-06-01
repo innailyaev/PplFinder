@@ -18,3 +18,11 @@ export const COLORS = {
   primary: "primary",
   secondary: "secondary",
 };
+
+export const NATIONS =[
+  {value:"BR" ,label:"Brazil"},
+  {value:"AU" ,label:"Australia"},
+  {value:"CA" , label:"Canada"},
+  {value:"DE" , label:"Germany"},
+  {value:"FR" , label:"France"},
+]

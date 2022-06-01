@@ -1,18 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Text from "components/Text";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import {FavoritesContext} from "../../contexts/FavoritesContext";
 
-const FavoritesList = ({favoritesUsers}) => {
 
-  //const[favoritesUsers,setFavoritesUsers] = useState([]);
+const FavoritesList = () => {
+
+  const {favoritesUsers, setFavoritesUsers} = useContext(FavoritesContext);
+
+  useEffect(() => {
+    setFavoritesUsers(JSON.parse(localStorage.getItem("favoritesUsers")));
+  }, [favoritesUsers]);
+
+  const onMouseClick = (user) =>{
+    const filteredUsers = favoritesUsers.filter(favorite => favorite !== user);
+    localStorage.setItem('favoritesUsers', JSON.stringify(filteredUsers));
+  }
 
 
   return (
     <S.UserList>
       <S.List>
-        {favoritesUsers.map((user, index) => {
+        {favoritesUsers?.map((user, index) => {
           return (
             <S.User
               key={index}
@@ -32,7 +43,7 @@ const FavoritesList = ({favoritesUsers}) => {
               </S.UserInfo>
               
               <S.IconButtonWrapper isVisible={true}>
-                <IconButton>
+                <IconButton onClick={() => onMouseClick(user)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
               </S.IconButtonWrapper>

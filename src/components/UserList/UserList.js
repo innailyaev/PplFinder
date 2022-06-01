@@ -1,13 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useRef, useCallback} from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import {NationalitiesContext} from "../../contexts/NationalitiesContext";
+import {FavoritesContext} from "../../contexts/FavoritesContext";
+import {PageContext} from "../../contexts/PageContext";
+import * as C from "../../constant";
 
-const UserList = ({ users, isLoading,nationalities,setNationalities,favoritesUsers,setFavoritesUsers }) => {
+const UserList = ({ users, isLoading }) => {
+
   const [hoveredUserId, setHoveredUserId] = useState();
+  const {nationalities,setNationalities,handleCheckboxChange} = useContext(NationalitiesContext);
+  const {favoritesUsers,setFavoritesUsers,addToFavorites} = useContext(FavoritesContext);
+  const {setPageNumber} = useContext(PageContext);
+  const observer = useRef();
+
+  const lastUserElementRef = useCallback(node => {
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setPageNumber(prevPageNumber=>prevPageNumber+1);
+      }
+    })
+    if (node) observer.current.observe(node);
+  }, []);
+
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -17,58 +39,27 @@ const UserList = ({ users, isLoading,nationalities,setNationalities,favoritesUse
     setHoveredUserId();
   };
 
-  const onMouseClick = (user)=>{
-    if(!(favoritesUsers.includes(user))){
-      favoritesUsers.push(user);
-      setFavoritesUsers(favoritesUsers=>[...favoritesUsers]);
-    }
-    else{
-      let index=favoritesUsers.indexOf(user);
-      favoritesUsers.splice(index,1);
-      setFavoritesUsers(favoritesUsers=>[...favoritesUsers]);
-    }
-    console.log(favoritesUsers);
-    //localStorage.setItem('favoritesUsers', JSON.stringify(favoritesUsers));
-  }
-
-  const handleChange = (value,isChecked) => {
-    if(isChecked){
-      console.log(nationalities.includes(value));
-      if(!(nationalities.includes(value))){
-        nationalities.push(value);
-        setNationalities(nationalities=>[...nationalities]);
-      }
-    }
-    else{
-      let index=nationalities.indexOf(value);
-      nationalities.splice(index,1);
-      setNationalities(nationalities=>[...nationalities]);
-      console.log(nationalities);
-    }
-  }
-
+  
   useEffect(() => {
-    localStorage.setItem('favoritesUsers', JSON.stringify(favoritesUsers));
-  }, [favoritesUsers]);
+     setFavoritesUsers((JSON.parse(localStorage.getItem("favoritesUsers"))) || []);
+  }, []);
 
   return (
     <S.UserList>
-      <S.Filters>
-        <CheckBox value="BR" label="Brazil" onChange={handleChange}/>
-        <CheckBox value="AU" label="Australia" onChange={handleChange} />
-        <CheckBox value="CA" label="Canada" onChange={handleChange} />
-        <CheckBox value="DE" label="Germany" onChange={handleChange} />
-        <CheckBox value="FR" label="France" onChange={handleChange} /> 
-
+      <S.Filters>{
+        C.NATIONS.map((nation,index)=>{
+          return <CheckBox key={index} value={nation.value} label={nation.label} onChange={handleCheckboxChange}/>
+        })
+        }
       </S.Filters>
       <S.List>
         {users.map((user, index) => {
           return (
             <S.User
+              ref={index + 1 == users.length ? lastUserElementRef : null}
               key={index}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
-              //onClick={() => handleMouseClick(user)}
             >
               <S.UserPicture src={user?.picture.large} alt="" />
               <S.UserInfo>
@@ -85,7 +76,7 @@ const UserList = ({ users, isLoading,nationalities,setNationalities,favoritesUse
               </S.UserInfo>
               
               <S.IconButtonWrapper isVisible={index === hoveredUserId || favoritesUsers.includes(user) }>
-                <IconButton onClick={() => onMouseClick(user)}>
+                <IconButton onClick={() => addToFavorites(user)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
               </S.IconButtonWrapper>
