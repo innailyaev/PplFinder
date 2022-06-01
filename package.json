@@ -1,5 +1,6 @@
 {
   "name": "ppl-finder",
+  "homepage": "http://innailyaev.github.io/PplFinder/",
   "version": "1.0.7",
   "bin": "./bin/cli.js",
   "license": "MIT",
@@ -24,6 +25,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -47,6 +50,8 @@
     ]
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0"
+    "babel-eslint": "^10.1.0",
+    "gh-pages": "^4.0.0",
+    "s": "^1.0.0"
   }
 }
