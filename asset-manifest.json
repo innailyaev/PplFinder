@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.js": "/innailyaev/PplFinder.git/static/js/main.26205f4c.chunk.js",
+    "main.js.map": "/innailyaev/PplFinder.git/static/js/main.26205f4c.chunk.js.map",
+    "runtime-main.js": "/innailyaev/PplFinder.git/static/js/runtime-main.af0419ae.js",
+    "runtime-main.js.map": "/innailyaev/PplFinder.git/static/js/runtime-main.af0419ae.js.map",
+    "static/js/2.bb433090.chunk.js": "/innailyaev/PplFinder.git/static/js/2.bb433090.chunk.js",
+    "static/js/2.bb433090.chunk.js.map": "/innailyaev/PplFinder.git/static/js/2.bb433090.chunk.js.map",
+    "index.html": "/innailyaev/PplFinder.git/index.html",
+    "static/js/2.bb433090.chunk.js.LICENSE.txt": "/innailyaev/PplFinder.git/static/js/2.bb433090.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.af0419ae.js",
+    "static/js/2.bb433090.chunk.js",
+    "static/js/main.26205f4c.chunk.js"
+  ]
+}
